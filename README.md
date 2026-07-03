@@ -1,0 +1,1 @@
+# gerador-de-perguntas-para-verdade-ou-desafio
