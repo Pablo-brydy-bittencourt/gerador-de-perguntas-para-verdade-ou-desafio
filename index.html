@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Senha Pro 🔮</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web">
+  </script>
+  <img src="https://cdn-icons-png.flaticon.com/512/4182/4182685.png" jsaction="" class="sFlh5c FyHeAf iPVvYb" style="max-width: 512px; width: 489px; height: 489px; margin: 0px;" alt="Cadeado em forma de coração - ícones de amor e romance grátis" jsname="kn3ccd">
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <div class="logo-area">
+                <i class="ph ph-lock-key icon-logo"></i>
+            </div>
+            <h1 class="main-title">Gerador de Senhas ⚡</h1>
+            <p class="subtitle">Crie senhas ultra fortes e protegidas na hora! 🔐</p>
+        </header>
 
+        <section class="display-section">
+            <input type="text" id="password-display" readonly placeholder="Sua senha aparecerá aqui... 🎲">
+            <button id="btn-copy" title="Copiar senha">
+                <i class="ph ph-copy"></i>
+            </button>
+        </section>
+
+        <div class="strength-meter">
+            <div id="strength-bar" class="strength-bar"></div>
+            <span id="strength-text" class="strength-text">Segurança: - 📌</span>
+        </div>
+
+        <section class="config-section">
+            <h2 class="config-title">Personalize seu código ⚙️</h2>
+
+            <div class="control-group">
+                <div class="control-label-row">
+                    <span>📏 Tamanho da senha</span>
+                    <span id="char-count" class="count-badge">12</span>
+                </div>
+                <div class="slider-container">
+                    <button class="step-btn" id="btn-minus">➖</button>
+                    <input type="range" id="length-slider" min="6" max="32" value="12">
+                    <button class="step-btn" id="btn-plus">➕</button>
+                </div>
+            </div>
+
+            <div class="options-grid">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="chk-uppercase" checked>
+                    <span class="checkmark"></span>
+                    🔠 Maiúsculas (A-Z)
+                </label>
+                <label class="checkbox-container">
+                    <input type="checkbox" id="chk-lowercase" checked>
+                    <span class="checkmark"></span>
+                    🔡 Minúsculas (a-z)
+                </label>
+                <label class="checkbox-container">
+                    <input type="checkbox" id="chk-numbers" checked>
+                    <span class="checkmark"></span>
+                    🔢 Números (0-9)
+                </label>
+                <label class="checkbox-container">
+                    <input type="checkbox" id="chk-symbols">
+                    <span class="checkmark"></span>
+                    🔮 Símbolos (!@#$)
+                </label>
+            </div>
+
+            <button id="btn-generate" class="generate-btn">
+                <i class="ph ph-sparkles"></i> Gerar Nova Senha ✨
+            </button>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
