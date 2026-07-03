@@ -1,0 +1,134 @@
+document.addEventListener("DOMContentLoaded", () => {
+
+    const CHAR_SETS = {
+        uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        lowercase: "abcdefghijklmnopqrstuvwxyz",
+        numbers: "0123456789",
+        symbols: "!@#$%^&*()_+-=[]{}|;:,.<>?"
+    };
+
+    const displayInput = document.getElementById("password-display");
+    const btnCopy = document.getElementById("btn-copy");
+    const btnGenerate = document.getElementById("btn-generate");
+    const lengthSlider = document.getElementById("length-slider");
+    const charCount = document.getElementById("char-count");
+    const btnMinus = document.getElementById("btn-minus");
+    const btnPlus = document.getElementById("btn-plus");
+    const strengthBar = document.getElementById("strength-bar");
+    const strengthText = document.getElementById("strength-text");
+
+    const checkboxes = {
+        uppercase: document.getElementById("chk-uppercase"),
+        lowercase: document.getElementById("chk-lowercase"),
+        numbers: document.getElementById("chk-numbers"),
+        symbols: document.getElementById("chk-symbols")
+    };
+
+    function updateLength(value) {
+        lengthSlider.value = value;
+        charCount.textContent = value;
+        generatePassword();
+    }
+
+    if (lengthSlider) {
+        lengthSlider.addEventListener("input", (e) => updateLength(e.target.value));
+    }
+    
+    if (btnMinus) {
+        btnMinus.addEventListener("click", () => { 
+            if(parseInt(lengthSlider.value) > 6) updateLength(parseInt(lengthSlider.value) - 1);
+        });
+    }
+    
+    if (btnPlus) {
+        btnPlus.addEventListener("click", () => { 
+            if(parseInt(lengthSlider.value) < 32) updateLength(parseInt(lengthSlider.value) + 1);
+        });
+    }
+
+    Object.values(checkboxes).forEach(checkbox => {
+        if (checkbox) checkbox.addEventListener("change", generatePassword);
+    });
+
+    function generatePassword() {
+        if (!displayInput) return;
+
+        let availableChars = "";
+        let requiredTypesCount = 0;
+
+        if (checkboxes.uppercase && checkboxes.uppercase.checked) { availableChars += CHAR_SETS.uppercase; requiredTypesCount++; }
+        if (checkboxes.lowercase && checkboxes.lowercase.checked) { availableChars += CHAR_SETS.lowercase; requiredTypesCount++; }
+        if (checkboxes.numbers && checkboxes.numbers.checked) { availableChars += CHAR_SETS.numbers; requiredTypesCount++; }
+        if (checkboxes.symbols && checkboxes.symbols.checked) { availableChars += CHAR_SETS.symbols; requiredTypesCount++; }
+
+        if (availableChars === "") {
+            displayInput.value = "Marque uma opção! 🛠️";
+            updateStrength(0, 0);
+            return;
+        }
+
+        const passwordLength = parseInt(lengthSlider.value) || 12;
+        let generatedPassword = "";
+
+        const randomValues = new Uint32Array(passwordLength);
+        window.crypto.getRandomValues(randomValues);
+
+        for (let i = 0; i < passwordLength; i++) {
+            const randomIndex = randomValues[i] % availableChars.length;
+            generatedPassword += availableChars.charAt(randomIndex);
+        }
+
+        displayInput.value = generatedPassword;
+        updateStrength(passwordLength, requiredTypesCount);
+    }
+
+    function updateStrength(length, typesCount) {
+        if (!strengthBar || !strengthText) return;
+        
+        strengthBar.className = "strength-bar"; 
+        
+        if (length === 0) {
+            strengthText.textContent = "Segurança: - 📌";
+            return;
+        }
+
+        let score = length * 2 + (typesCount * 10);
+
+        if (length < 8 || typesCount <= 1) {
+            strengthBar.classList.add("weak");
+            strengthText.textContent = "Fraca 🛑🥵";
+            strengthText.style.color = "var(--weak)";
+        } else if (length < 12 || score < 45) {
+            strengthBar.classList.add("medium");
+            strengthText.textContent = "Média ⚠️🤨";
+            strengthText.style.color = "var(--medium)";
+        } else {
+            strengthBar.classList.add("strong");
+            strengthText.textContent = "Ultra Forte 💪🔮";
+            strengthText.style.color = "var(--strong)";
+        }
+    }
+
+    if (btnCopy) {
+        btnCopy.addEventListener("click", () => {
+            if (!displayInput || displayInput.value === "" || displayInput.value.includes("Marque")) return;
+
+            navigator.clipboard.writeText(displayInput.value).then(() => {
+                const originalIcon = btnCopy.innerHTML;
+                btnCopy.innerHTML = '📋 ✅';
+                btnCopy.style.background = "rgba(34, 197, 94, 0.2)";
+                
+                setTimeout(() => {
+                    btnCopy.innerHTML = originalIcon;
+                    btnCopy.style.background = "";
+                }, 1500);
+            });
+        });
+    }
+
+    if (btnGenerate) {
+        btnGenerate.addEventListener("click", generatePassword);
+    }
+
+    generatePassword();
+});
